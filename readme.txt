@@ -32,19 +32,19 @@ Display the Facebook Like button on any page.
 
 *Note: The Open Graph description tag will default to the site's Tagline if their is no excerpt.*
 
-To use, add <?php fb_likebutton(); ?> within the Loop.
+To use, add `<?php fb_likebutton(); ?>` within the Loop.
 
 = Comments =
 
 Display the Facebook comment box for the current page/post. To retrieve the comment count, please see Comment Count.
 
-To use, add <?php fb_comments(); ?> within the Loop.
+To use, add `<?php fb_comments(); ?>` within the Loop.
 
 = Comment Count =
 
 Display the comment count for the current page/post.
 
-To use, add <?php fb_commentcount(); ?> within the Loop.
+To use, add `<?php fb_commentcount(); ?>` within the Loop.
 
 == Changelog ==
 
