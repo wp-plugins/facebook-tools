@@ -3,7 +3,7 @@
 Plugin Name: Facebook Tools
 Plugin URI: http://www.theuprisingcreative.com/
 Description: Add Facebook support to your WordPress blog.
-Version: 1.0
+Version: 1.0.1
 Author: The Uprising Creative
 Author URI: http://www.theuprisingcreative.com/
 License: GPL2
@@ -33,8 +33,35 @@ class UprisingCreative_FacebookTools {
 	
 	public function UprisingCreative_FacebookTools() {
 		add_action('wp_footer',array(&$this,'load_sdk'));
+		add_action('wp_head',array(&$this,'add_opengraphmeta'));
 		//Set Token
 		$this->token = $this->setToken();
+	}
+
+	public function add_opengraphmeta() {
+		global $post;
+		$app_id = get_option($this->ns.'fbtools_app_id');
+		$title = wp_title(null,0);
+		$desc = (isset($post->post_excerpt) && strlen($post->post_excerpt)) ? $post->post_excerpt : get_bloginfo('description');
+		$sitename = get_bloginfo('name');
+		$site = get_bloginfo('home');
+		$image = $this->get_thumbnail_src($post->ID,'full');
+		$html = <<<EOD
+	<meta property="og:title" content="{$post->post_title}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{$site}{$_SERVER['REQUEST_URI']}" />
+    <meta property="og:site_name" content="{$sitename}" />
+	<meta property="og:image" content="{$image}" />
+    <meta property="og:description" content="{$desc}" />
+	<meta property="fb:app_id" content="{$app_id}" />
+EOD;
+		echo $html;
+	}
+
+	public function get_thumbnail_src($post_id,$size) {
+		$thumb_id = get_post_meta($post_id,'_thumbnail_id',false);
+		$thumb = wp_get_attachment_image_src($thumb_id[0],$size);
+		return (isset($thumb[0])) ? $thumb[0] : '';
 	}
 
 	public function add_menus() {		
@@ -246,7 +273,7 @@ class UprisingCreative_FacebookTools {
 		$res = curl_exec($ch);
 		curl_close($ch);
 		$xml = new SimpleXMLElement($res);
-		return (isset($xml->comments_info)) ? (string) $xml->comments_info->{count} : 0;
+		return (isset($xml->comments_info)) ? (string) $xml->comments_info->count : 0;
 	}
 
 	public function fb_likebutton() {

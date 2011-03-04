@@ -11,7 +11,7 @@ Donate link: http://theuprisingcreative.com/\
 Tags: Facebook, connect, comments, fb, tools, social, network, media, like, api\
 Requires at least: 3.0.2\
 Tested up to: 3.02\
-Stable tag: release-1.0\
+Stable tag: release-1.0.1\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720\ql\qnatural\pardirnatural
 
 \f1 \cf0 \
@@ -35,6 +35,7 @@ This plugin requires a Facebook API key. You can get one here: http://developers
 \f0 \cf0 1. Upload the plugin folder to the */wp-content/plugins/* directory\
 1. Activate the plugin through the *Plugins* menu in WordPress\
 1. Go to *Facebook Tools* menu and fill out your Facebook application information with obtained from Facebook.\
+1. Make sure your template is calling *wp_head()* and *wp_footer()* to allow loading of the Facebook API library.\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720\ql\qnatural\pardirnatural
 
 \f1 \cf0 \
@@ -45,6 +46,8 @@ This plugin requires a Facebook API key. You can get one here: http://developers
 = Like Button =\
 \
 Display the Facebook Like button on any page.\
+\
+*Note: The Open Graph description tag will default to the site's Tagline if their is no excerpt.*\
 \
 To use, add <?php fb_likebutton(); ?> within the Loop.\
 \
@@ -63,6 +66,9 @@ To use, add <?php fb_commentcount(); ?> within the Loop.\
 \cf0 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720\ql\qnatural\pardirnatural
 \cf0 == Changelog ==\
+\
+= 1.0.1 =\
+* Open Graph tags are now automatically added to the header.\
 \
 = 1.0 =\
 * Plugin is now public!}
