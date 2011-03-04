@@ -4,7 +4,7 @@ Donate link: http://theuprisingcreative.com/
 Tags: Facebook, connect, comments, fb, tools, social, network, media, like, api
 Requires at least: 3.0.2
 Tested up to: 3.02
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 
 Easily integrate Facebook Connect to your WordPress blog/site with simple template functions.
 
@@ -47,6 +47,9 @@ Display the comment count for the current page/post.
 To use, add <?php fb_commentcount(); ?> within the Loop.
 
 == Changelog ==
+
+= 1.0.2 =
+* Fixed Plugin update and readme.txt file.
 
 = 1.0.1 =
 * Open Graph tags are now automatically added to the header.
