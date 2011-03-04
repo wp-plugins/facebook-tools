@@ -48,6 +48,9 @@ To use, add <?php fb_commentcount(); ?> within the Loop.
 
 == Changelog ==
 
+= 1.0.2 =
+* Fixed Plugin update and readme.txt file.
+
 = 1.0.1 =
 * Open Graph tags are now automatically added to the header.
 
