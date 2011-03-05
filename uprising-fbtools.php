@@ -3,7 +3,7 @@
 Plugin Name: Facebook Tools
 Plugin URI: http://www.theuprisingcreative.com/
 Description: Add Facebook support to your WordPress blog.
-Version: 1.0.4
+Version: 1.0.5
 Author: The Uprising Creative
 Author URI: http://www.theuprisingcreative.com/
 License: GPL2
@@ -281,6 +281,7 @@ EOD;
 	}
 
 	public function fb_comments($post) {
+		$link = ($post->ID) ? get_permalink($post->ID) : $this->currentURI;
 		$params = '';
 		if($width=get_option($this->ns.'fbtools_comments_width')) { $params .= ' width="'.$width.'"'; }
 		if($numposts=get_option($this->ns.'fbtools_comments_numposts')) { $params .= ' numposts="'.$numposts.'"'; }
@@ -288,7 +289,7 @@ EOD;
 			$params .= ' href="'.$this->currentURI.'"';
 		}
 		else {
-			$params .= ' xid="'.urlencode($this->currentURI).'"';
+			$params .= ' xid="'.urlencode($link).'"';
 			if($reverse=get_option($this->ns.'fbtools_comments_reverse')) { $params .= ' reverse="'.(($reverse=="on")?1:0).'"'; }
 			if($css=get_option($this->ns.'fbtools_comments_css')) { $params .= ' css="'.get_bloginfo('template_directory').'/'.$css.'?'.time().'"'; }
 		}
@@ -297,8 +298,9 @@ EOD;
 
 	public function fb_commentcount($post) {
 		$migrated = get_option($this->ns.'fbtools_comments_migrated');
-		$fql = 'SELECT count FROM comments_info WHERE app_id = \''.get_option($this->ns.'fbtools_app_id').'\' AND xid = \''.urlencode($this->currentURI).'\'';
-		if($migrated) { $fql = 'SELECT commentsbox_count FROM link_stat WHERE url = \''.$this->currentURI.'\''; }
+		$link = ($post->ID) ? get_permalink($post->ID) : $this->currentURI;
+		$fql = 'SELECT count FROM comments_info WHERE app_id = \''.get_option($this->ns.'fbtools_app_id').'\' AND xid = \''.urlencode($link).'\'';
+		if($migrated) { $fql = 'SELECT commentsbox_count FROM link_stat WHERE url = \''.$link.'\''; }
 		$url = 'https://api.facebook.com/method/fql.query?access_token='.$this->token.'&query='.urlencode($fql);
 		$ch = curl_init();
 		curl_setopt($ch,CURLOPT_URL,$url);
