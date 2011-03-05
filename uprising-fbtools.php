@@ -3,7 +3,7 @@
 Plugin Name: Facebook Tools
 Plugin URI: http://www.theuprisingcreative.com/
 Description: Add Facebook support to your WordPress blog.
-Version: 1.0.3
+Version: 1.0.4
 Author: The Uprising Creative
 Author URI: http://www.theuprisingcreative.com/
 License: GPL2
@@ -31,11 +31,14 @@ class UprisingCreative_FacebookTools {
 	private $ns = 'uprisingcreative_';
 	private $token = '';
 	
+	private $currentURI = '';
+	
 	public function UprisingCreative_FacebookTools() {
 		add_action('wp_footer',array(&$this,'load_sdk'));
 		add_action('wp_head',array(&$this,'add_opengraphmeta'));
 		//Set Token
 		$this->token = $this->setToken();
+		$this->currentURI = get_bloginfo('home').$_SERVER['REQUEST_URI'];
 	}
 
 	public function add_opengraphmeta() {
@@ -49,7 +52,7 @@ class UprisingCreative_FacebookTools {
 		$html = <<<EOD
 	<meta property="og:title" content="{$post->post_title}" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="{$site}{$_SERVER['REQUEST_URI']}" />
+    <meta property="og:url" content="{$this->currentURI}" />
     <meta property="og:site_name" content="{$sitename}" />
 	<meta property="og:image" content="{$image}" />
     <meta property="og:description" content="{$desc}" />
@@ -81,6 +84,8 @@ EOD;
 		register_setting($this->ns.'fbtools_comments_settings',$this->ns.'fbtools_comments_numposts');
 		register_setting($this->ns.'fbtools_comments_settings',$this->ns.'fbtools_comments_reverse');
 		register_setting($this->ns.'fbtools_comments_settings',$this->ns.'fbtools_comments_migrated');
+		register_setting($this->ns.'fbtools_comments_settings',$this->ns.'fbtools_comments_width');
+		register_setting($this->ns.'fbtools_comments_settings',$this->ns.'fbtools_comments_css');
 		//Like
 		register_setting($this->ns.'fbtools_likebutton_settings',$this->ns.'fbtools_likebutton_href');
 		register_setting($this->ns.'fbtools_likebutton_settings',$this->ns.'fbtools_likebutton_layout');
@@ -132,17 +137,36 @@ EOD;
 	public function settings_comments() { ?>
 		<div class="wrap">
 			<h2>Facebook Tools - Comments</h2>
-			<form method="post" action="options.php">
+			<form method="post" action="options.php" name="form">
 			<?php settings_fields($this->ns.'fbtools_comments_settings'); ?>
 			<?php do_settings_fields($this->ns.'fbtools_comments_settings'); ?>
-			<table class="form-table">
+            <h3>Global Settings</h3>
+            <table class="form-table">
+				<tr valign="top">
+					<th scope="row">Use New Comment Box</th>
+					<td>
+                    	<input type="checkbox" name="<?php echo $this->ns; ?>fbtools_comments_migrated" <?php echo (get_option($this->ns.'fbtools_comments_migrated')) ? "checked=\"checked\"" : ""; ?> />
+                        Check this box to use the new and improved comment box. <a href="http://developers.facebook.com/blog/post/472" target="_blank">Read more</a>
+                    </td>
+				</tr>
 				<tr valign="top">
 					<th scope="row">Number of Comments</th>
 					<td>
                     	<input type="text" name="<?php echo $this->ns; ?>fbtools_comments_numposts" value="<?php echo get_option($this->ns.'fbtools_comments_numposts'); ?>" />
-                        The maximum number of posts to display. You can set numposts to 0 to not display any comments, for moderation purposes. Default value is 10
+                        The number of comments to show by default. Default: 10.
                     </td>
 				</tr>
+				<tr valign="top">
+					<th scope="row">Width</th>
+					<td>
+                    	<input type="text" name="<?php echo $this->ns; ?>fbtools_comments_width" value="<?php echo get_option($this->ns.'fbtools_comments_width'); ?>" />
+                        The width of the plugin in pixels. Minimum width: 500px.
+                    </td>
+				</tr>
+            </table>
+            <h3>Legacy Comments Box</h3>
+            <p>All settings below only take effect if "Use New Comment Box" is unchecked under Global Settings.</p>
+			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">Reverse Order</th>
 					<td>
@@ -151,10 +175,10 @@ EOD;
                     </td>
 				</tr>
 				<tr valign="top">
-					<th scope="row">Migrated (New)</th>
+					<th scope="row">Stylesheet</th>
 					<td>
-                    	<input type="checkbox" name="<?php echo $this->ns; ?>fbtools_comments_migrated" <?php echo (get_option($this->ns.'fbtools_comments_migrated')) ? "checked=\"checked\"" : ""; ?> />
-                        Check this box to migrate your old comment box to the new and improved comment box. <a href="http://developers.facebook.com/blog/post/472" target="_blank">Read more</a>
+                    	<input type="text" name="<?php echo $this->ns; ?>fbtools_comments_css" value="<?php echo get_option($this->ns.'fbtools_comments_css'); ?>" />
+						The name of your stylesheet that is located in your theme folder. (Example: facebook.css)
                     </td>
 				</tr>
 			</table>
@@ -255,17 +279,26 @@ EOD;
 
 <?php
 	}
-	
-	public function fb_comments($xid) {
+
+	public function fb_comments($post) {
 		$params = '';
+		if($width=get_option($this->ns.'fbtools_comments_width')) { $params .= ' width="'.$width.'"'; }
 		if($numposts=get_option($this->ns.'fbtools_comments_numposts')) { $params .= ' numposts="'.$numposts.'"'; }
-		if($reverse=get_option($this->ns.'fbtools_comments_reverse')) { $params .= ' reverse="'.(($reverse=="on")?1:0).'"'; }
-		if($migrated=get_option($this->ns.'fbtools_comments_migrated')) { $params .= ' migrated="'.(($migrated=="on")?1:0).'"'; }
-		return '<fb:comments xid="'.$xid.'"'.$params.'></fb:comments>';
+		if($migrated=get_option($this->ns.'fbtools_comments_migrated')) {
+			$params .= ' href="'.$this->currentURI.'"';
+		}
+		else {
+			$params .= ' xid="'.urlencode($this->currentURI).'"';
+			if($reverse=get_option($this->ns.'fbtools_comments_reverse')) { $params .= ' reverse="'.(($reverse=="on")?1:0).'"'; }
+			if($css=get_option($this->ns.'fbtools_comments_css')) { $params .= ' css="'.get_bloginfo('template_directory').'/'.$css.'?'.time().'"'; }
+		}
+		return '<fb:comments '.$params.'></fb:comments>';
 	}
 
-	public function fb_commentcount($xid) {
-		$fql = 'SELECT count FROM comments_info WHERE app_id = \''.get_option($this->ns.'fbtools_app_id').'\' AND xid = \''.$xid.'\'';
+	public function fb_commentcount($post) {
+		$migrated = get_option($this->ns.'fbtools_comments_migrated');
+		$fql = 'SELECT count FROM comments_info WHERE app_id = \''.get_option($this->ns.'fbtools_app_id').'\' AND xid = \''.urlencode($this->currentURI).'\'';
+		if($migrated) { $fql = 'SELECT commentsbox_count FROM link_stat WHERE url = \''.$this->currentURI.'\''; }
 		$url = 'https://api.facebook.com/method/fql.query?access_token='.$this->token.'&query='.urlencode($fql);
 		$ch = curl_init();
 		curl_setopt($ch,CURLOPT_URL,$url);
@@ -273,7 +306,10 @@ EOD;
 		$res = curl_exec($ch);
 		curl_close($ch);
 		$xml = new SimpleXMLElement($res);
-		return (isset($xml->comments_info)) ? (string) $xml->comments_info->count : 0;
+		$count = 0;
+		if($migrated) { $count = (isset($xml->link_stat->commentsbox_count)) ? (string) $xml->link_stat->commentsbox_count : 0; }
+		else { $count = (isset($xml->comments_info)) ? (string) $xml->comments_info->count : 0; }
+		return $count;
 	}
 
 	public function fb_likebutton() {
@@ -294,14 +330,12 @@ add_action('admin_menu',array(&$thePlugin,'add_menus'));
 //Template functions
 function fb_comments() {
 	global $post, $thePlugin;
-	$xid = $post->ID.'-'.$post->post_name;
-	echo $thePlugin->fb_comments($xid);
+	echo $thePlugin->fb_comments($post);
 }
 
 function fb_commentcount() {
 	global $post, $thePlugin;
-	$xid = $post->ID.'-'.$post->post_name;
-	echo $thePlugin->fb_commentcount($xid);
+	echo $thePlugin->fb_commentcount($post);
 }
 
 function fb_likebutton() {
