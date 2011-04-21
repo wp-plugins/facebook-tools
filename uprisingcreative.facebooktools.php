@@ -1,5 +1,19 @@
 <?php
 
+/*
+ *	Last Modified:	2011-04-14
+ *
+ *
+ *	----------------------------------
+ *	CHANGELOG
+ *	----------------------------------
+ *	2011-04-14
+ 		- Fixed currentURI property
+ 		- Fixed fb_comments() bug where the href/xid is not parsing correctly
+ 		- Fixed 'numposts' and 'num_posts' difference between the Legacy and New comment box
+ *
+ */
+
 
 class UprisingCreative_FacebookTools {
 
@@ -18,27 +32,29 @@ class UprisingCreative_FacebookTools {
 		add_action('wp_head',array(&$this,'add_opengraphmeta'));
 		//Set Token
 		$this->token = $this->setToken();
-		$this->currentURI = get_bloginfo('home').$_SERVER['REQUEST_URI'];
+		$this->currentURI = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
 	}
 
 	public function add_opengraphmeta() {
 		global $post;
-		$app_id = get_option($this->ns.'fbtools_app_id');
-		$title = wp_title(null,0);
-		$desc = (isset($post->post_excerpt) && strlen($post->post_excerpt)) ? $post->post_excerpt : get_bloginfo('description');
-		$sitename = get_bloginfo('name');
-		$site = get_bloginfo('home');
-		$image = $this->get_thumbnail_src($post->ID,'full');
-		$html = <<<EOD
-	<meta property="og:title" content="{$post->post_title}" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{$this->currentURI}" />
-    <meta property="og:site_name" content="{$sitename}" />
-	<meta property="og:image" content="{$image}" />
-    <meta property="og:description" content="{$desc}" />
-	<meta property="fb:app_id" content="{$app_id}" />
+		if(!get_option($this->ns.'fbtools_disable_opengraph')) {
+			$app_id = get_option($this->ns.'fbtools_app_id');
+			$title = wp_title(null,0);
+			$desc = (isset($post->post_excerpt) && strlen($post->post_excerpt)) ? $post->post_excerpt : get_bloginfo('description');
+			$sitename = get_bloginfo('name');
+			$site = get_bloginfo('home');
+			$image = $this->get_thumbnail_src($post->ID,'full');
+			$html = <<<EOD
+		<meta property="og:title" content="{$post->post_title}" />
+	    <meta property="og:type" content="website" />
+	    <meta property="og:url" content="{$this->currentURI}" />
+	    <meta property="og:site_name" content="{$sitename}" />
+		<meta property="og:image" content="{$image}" />
+	    <meta property="og:description" content="{$desc}" />
+		<meta property="fb:app_id" content="{$app_id}" />
 EOD;
-		echo $html;
+			echo $html;
+		}
 	}
 
 	public function get_thumbnail_src($post_id,$size) {
@@ -86,7 +102,6 @@ EOD;
 
 	public function fb_comments($post,$params=array()) {
 		##	Set Defaults
-		$link = (strlen($params['xid'])) ? $params['xid'] : (($post->ID) ? get_permalink($post->ID) : $this->currentURI);
 		$width = (strlen($params['width'])) ? $params['width'] : get_option($this->ns.'fbtools_comments_width');
 		$numposts = (strlen($params['numposts'])) ? $params['numposts'] : get_option($this->ns.'fbtools_comments_numposts');
 		$migrated = (strlen($params['migrated'])) ? $params['migrated'] : get_option($this->ns.'fbtools_comments_migrated');
@@ -94,22 +109,23 @@ EOD;
 
 		$paramstr = '';
 		if($width) { $paramstr .= ' width="'.$width.'"'; }
-		if(strlen($numposts)) { $paramstr .= ' numposts="'.$numposts.'"'; }
 		if($migrated) {
-			##	Get New Comment Box Settings
 			$href = (!empty($params['href'])) ? $params['href'] : $this->currentURI;
+			if(strlen($numposts)) { $paramstr .= ' num_posts="'.$numposts.'"'; }
+			##	Get New Comment Box Settings
 			$paramstr .= ' href="'.urlencode($href).'"';
 			$paramstr .= ' colorscheme="'.$colorscheme.'"';
 		}
 		else {
+			$href = (!empty($params['xid'])) ? $params['xid'] : (($post->ID) ? get_permalink($post->ID) : $this->currentURI);
+			if(strlen($numposts)) { $paramstr .= ' numposts="'.$numposts.'"'; }
 			##	Get Legacy Comment Box Settings
 			$reverse = (!empty($params['reverse'])) ? (($params['reverse']=="on" || $params['reverse']===1) ? 1 : 0) : get_option($this->ns.'fbtools_comments_reverse');
 			$css =(!empty($css)) ? $css : get_option($this->ns.'fbtools_comments_css');
-
-			$paramstr .= ' xid="'.urlencode($link).'"';
 			if($reverse) { $paramstr .= ' reverse="'.$reverse.'"'; }
 			if($css) { $paramstr .= ' css="'.get_bloginfo('template_directory').'/'.$css.'?'.time().'"'; }
 		}
+		$paramstr .= ' xid="'.urlencode($link).'"';
 		return '<fb:comments '.$paramstr.'></fb:comments>';
 	}
 	

@@ -4,7 +4,7 @@ Donate link: http://theuprisingcreative.com/
 Tags: Facebook, connect, comments, fb, tools, social, network, media, like, api
 Requires at least: 3.0.2
 Tested up to: 3.1.1
-Stable tag: 1.1
+Stable tag: 1.1.1
 
 Easily integrate Facebook social plugins to your WordPress blog/site with simple template functions.
 
@@ -81,6 +81,9 @@ This plugin requires a Facebook API key. You can get one here: http://developers
 1. Make sure your template is calling *wp_head()* and *wp_footer()* to allow loading of the Facebook API library.
 
 == Changelog ==
+
+= 1.1.1 =
+* Added the ability to disable the automatic insertion of the Open Graph tags (in Facebook Tools > Facebook Tools panel).
 
 = 1.1 =
 * Organized plugin folder

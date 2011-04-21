@@ -22,6 +22,15 @@
             <th scope="row">Facebook URL</th>
             <td><input type="text" name="uprisingcreative_fbtools_facebook_url" value="<?php echo get_option('uprisingcreative_fbtools_facebook_url'); ?>" /></td>
         </tr>
+        <tr valign="top">
+            <th scope="row">Disable Open Tags</th>
+            <td>
+            	<input type="checkbox" name="uprisingcreative_fbtools_disable_opengraph" <?=(get_option('uprisingcreative_fbtools_disable_opengraph'))?'checked="checked"' : ''; ?> />
+            	<span class="description">
+            		Check this box to disable automatic placement of the Open Graph tags.
+            	</span>
+            </td>
+        </tr>
     </table>
     <p class="submit"><input type="submit" class="button-primary" value="<?php _e('Save Changes'); ?>" /></p>
     </form>
