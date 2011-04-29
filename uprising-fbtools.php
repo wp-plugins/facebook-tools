@@ -3,7 +3,7 @@
 Plugin Name: Facebook Tools
 Plugin URI: http://www.theuprisingcreative.com/
 Description: Add Facebook support to your WordPress blog.
-Version: 1.1.1
+Version: 1.2.0
 Author: The Uprising Creative
 Author URI: http://www.theuprisingcreative.com/
 License: GPL2
