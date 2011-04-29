@@ -1,12 +1,16 @@
 <?php
 
 /*
- *	Last Modified:	2011-04-14
+ *	Last Modified:	2011-04-29
  *
  *
  *	----------------------------------
  *	CHANGELOG
  *	----------------------------------
+ *	2011-04-29
+ 		- New method fb_sendbutton()
+ 		- Updated fb_likebutton()
+ 			- Added new parameter 'send'
  *	2011-04-14
  		- Fixed currentURI property
  		- Fixed fb_comments() bug where the href/xid is not parsing correctly
@@ -187,6 +191,7 @@ EOD;
 		$width = (!empty($params['width'])) ? $params['width'] : get_option($this->ns.'fbtools_likebutton_width');
 		$colorscheme = (!empty($params['colorscheme'])) ? $params['colorscheme'] : get_option($this->ns.'fbtools_likebutton_colorscheme');
 		$action = (!empty($params['action'])) ? $params['action'] : get_option($this->ns.'fbtools_likebutton_action');
+		$send = (!empty($params['send'])) ? $params['send'] : get_option($this->ns.'fbtools_likebutton_send');
 
 		$paramstr = '';
 		if($href) { $paramstr .= ' href="'.$href.'"'; }
@@ -194,7 +199,22 @@ EOD;
 		if($width) { $paramstr .= ' width="'.$width.'"'; }
 		if($colorscheme) { $paramstr .= ' colorscheme="'.$colorscheme.'"'; }
 		if($action) { $paramstr .= ' action="'.$action.'"'; }
+		if($send) { $paramstr .= ' send="'.$send.'"'; }
 		return '<fb:like '.$paramstr.'></fb:like>';
+	}
+
+	public function fb_sendbutton($params=array()) {
+		## Set Defaults
+		$href = (!empty($params['href'])) ? $params['href'] : get_option($this->ns.'fbtools_sendbutton_href');
+		$font = (!empty($params['font'])) ? $params['font'] : get_option($this->ns.'fbtools_sendbutton_font');
+		$colorscheme = (!empty($params['colorscheme'])) ? $params['colorscheme'] : get_option($this->ns.'fbtools_sendbutton_colorscheme');
+		$ref = (!empty($params['ref'])) ? $params['ref'] : get_option($this->ns.'fbtools_sendbutton_ref');
+		$paramstr = '';
+		if($href) { $paramstr .= ' href="'.$href.'"'; }
+		if($font) { $paramstr .= ' font="'.$font.'"'; }
+		if($colorscheme) { $paramstr .= ' colorscheme="'.$colorscheme.'"'; }
+		if($ref) { $paramstr .= ' ref="'.$ref.'"'; }
+		return '<fb:send '.$paramstr.'></fb:send>';
 	}
 	
 	public function fb_get_comments($post,$params=array()) {

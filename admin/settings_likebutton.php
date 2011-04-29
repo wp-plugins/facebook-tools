@@ -60,6 +60,13 @@
                 The color scheme for the like button.
             </td>
         </tr>
+        <tr valign="top">
+            <th scope="row">Send Button</th>
+            <td>
+            	<input type="checkbox" name="uprisingcreative_fbtools_likebutton_send" value="1" <?=(get_option('uprisingcreative_fbtools_likebutton_send'))?'checked="checked"':'';?> />
+                Specify whether or not to include the Send button.
+            </td>
+        </tr>
     </table>
     <p class="submit"><input type="submit" class="button-primary" value="<?php _e('Save Changes'); ?>" /></p>
     </form>

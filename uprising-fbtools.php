@@ -41,6 +41,7 @@ function uprising_fbtools_add_menus() {
 	add_menu_page('Facebook Tools','Facebook Tools',6,'facebook-tools/admin/settings_default','uprising_fbtools_admin_settings_default');
 	add_submenu_page('facebook-tools/admin/settings_default','Facebook Tools - Comments','Comments',6,'facebook-tools/admin/settings_comments','uprising_fbtools_admin_settings_comments');
 	add_submenu_page('facebook-tools/admin/settings_default','Facebook Tools - Like Button','Like Button',6,'facebook-tools/admin/settings_likebutton','uprising_fbtools_admin_settings_likebutton');
+	add_submenu_page('facebook-tools/admin/settings_default','Facebook Tools - Send Button','Send Button',6,'facebook-tools/admin/settings_sendbutton','uprising_fbtools_admin_settings_sendbutton');
 	add_action('admin_init','uprising_fbtools_register_settings');
 }
 
@@ -61,10 +62,16 @@ function uprising_fbtools_register_settings() {
 		register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_colorscheme');
 		//Like
 		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_href');
+		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_send');
 		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_layout');
 		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_width');
 		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_colorscheme');
 		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_action');
+		//Send
+		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_href');
+		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_font');
+		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_colorscheme');
+		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_ref');
 }
 
 ##	Admin Pages
@@ -76,6 +83,9 @@ function uprising_fbtools_admin_settings_comments() {
 }
 function uprising_fbtools_admin_settings_likebutton() {
 	include('admin/settings_likebutton.php');
+}
+function uprising_fbtools_admin_settings_sendbutton() {
+	include('admin/settings_sendbutton.php');
 }
 
 ?>

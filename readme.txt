@@ -3,8 +3,8 @@ Contributors: theuprising
 Donate link: http://theuprisingcreative.com/
 Tags: Facebook, connect, comments, fb, tools, social, network, media, like, api
 Requires at least: 3.0.2
-Tested up to: 3.1.1
-Stable tag: 1.1.1
+Tested up to: 3.1.2
+Stable tag: 1.2.0
 
 Easily integrate Facebook social plugins to your WordPress blog/site with simple template functions.
 
@@ -16,8 +16,13 @@ See below for full list of features, and how to use the plugin.
 = Features =
 * Auto Insertion of OpenGraph tags
 * Like Button
+* Send Button
 * Comments Box
 * Retrieve Facebook Comments
+
+= More Information =
+
+For more information, please read the Facebook documentations at http://developers.facebook.com/docs/plugins/
 
 = Like Button =
 
@@ -29,11 +34,27 @@ To use, add `<?php fb_likebutton(); ?>` within the Loop.
 
 *Parameters*
 
-* $href		(string)	Defaults to the current post/page's permalink if not set
+* $href			(string)	Defaults to the current post/page's permalink if not set
 * $layout		(string)	Choices: 'standard', 'button_count', 'box_count'
 * $width		(integer)	Width of the like button (in pixels)
 * $colorscheme	(string)	Choices: 'light', 'dark'
 * $action		(string)	Choices: 'like', 'recommend'
+* $send			(integer)	Include the send button? (1 to include, 0 to exclude)
+
+= Send Button =
+
+Display the Facebook Send button on any page.
+
+*Note: The Open Graph description tag will default to the site's Tagline if their is no excerpt.*
+
+To use, add `<?php fb_sendbutton(); ?>` within the Loop.
+
+*Parameters*
+
+* $href			(string)	Defaults to the current post/page's permalink if not set
+* $font			(string)	Choices: 'arial', 'lucida grande', 'segoe ui', 'tahoma', 'trebuchet ms', 'verdana' 
+* $colorscheme	(string)	Choices: 'light', 'dark'
+* $ref			(string)	A label for tracking referrals; must be less than 50 characters and can contain alphanumeric characters and some punctuation (currently +/=-.:_).
 
 = Comments =
 
@@ -43,12 +64,12 @@ To use, add `<?php fb_comments(); ?>` within the Loop.
 
 *Parameters*
 
-* $xid		(string)	A unique identifier for the current object
+* $xid			(string)	A unique identifier for the current object
 * $width		(integer)	Width of the comment box (in pixels)
-* $numposts	(integer)	Number of posts to display
-* $migrated	(boolean)	True to display the new comment box, false to display the old comment box
-* $reverse	(boolean)	Reverse the comments order (legacy only)
-* $css		(string)	Location of the custom CSS for the comment box (legacy only)
+* $numposts		(integer)	Number of posts to display
+* $migrated		(boolean)	True to display the new comment box, false to display the old comment box
+* $reverse		(boolean)	Reverse the comments order (legacy only)
+* $css			(string)	Location of the custom CSS for the comment box (legacy only)
 
 = Comment Count =
 
@@ -58,7 +79,7 @@ To use, add `<?php fb_commentcount(); ?>` within the Loop.
 
 *Parameters*
 
-* $xid		(string)	A unique identifier for the current object
+* $xid			(string)	A unique identifier for the current object
 
 = Get Comments =
 
@@ -68,8 +89,8 @@ To use, add `<?php fb_get_comments(); ?>` within the Loop.
 
 *Parameters*
 
-* $xid		(string)	A unique identifier for the current object
-* $migrated	(boolean)	True to fetch results from the new comment box object, false to fetch from the legacy comment box
+* $xid			(string)	A unique identifier for the current object
+* $migrated		(boolean)	True to fetch results from the new comment box object, false to fetch from the legacy comment box
 
 == Installation ==
 
@@ -81,6 +102,10 @@ This plugin requires a Facebook API key. You can get one here: http://developers
 1. Make sure your template is calling *wp_head()* and *wp_footer()* to allow loading of the Facebook API library.
 
 == Changelog ==
+
+= 1.2.0 =
+* Added the new Facebook Send button. (See instructions for usage example)
+* Updated the Like button to include the new "send" parameter
 
 = 1.1.1 =
 * Added the ability to disable the automatic insertion of the Open Graph tags (in Facebook Tools > Facebook Tools panel).
