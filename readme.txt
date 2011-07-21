@@ -3,8 +3,8 @@ Contributors: theuprising
 Donate link: http://theuprisingcreative.com/
 Tags: Facebook, connect, comments, fb, tools, social, network, media, like, api
 Requires at least: 3.0.2
-Tested up to: 3.1.2
-Stable tag: 1.2.0
+Tested up to: 3.2.1
+Stable tag: 1.2.1
 
 Easily integrate Facebook social plugins to your WordPress blog/site with simple template functions.
 
@@ -39,7 +39,7 @@ To use, add `<?php fb_likebutton(); ?>` within the Loop.
 * $width		(integer)	Width of the like button (in pixels)
 * $colorscheme	(string)	Choices: 'light', 'dark'
 * $action		(string)	Choices: 'like', 'recommend'
-* $send			(integer)	Include the send button? (1 to include, 0 to exclude)
+* $send			(boolean)	Include the send button?
 
 = Send Button =
 
@@ -80,6 +80,7 @@ To use, add `<?php fb_commentcount(); ?>` within the Loop.
 *Parameters*
 
 * $xid			(string)	A unique identifier for the current object
+* $return		(boolean)	Return the raw count number (Default: false)
 
 = Get Comments =
 
@@ -102,6 +103,13 @@ This plugin requires a Facebook API key. You can get one here: http://developers
 1. Make sure your template is calling *wp_head()* and *wp_footer()* to allow loading of the Facebook API library.
 
 == Changelog ==
+
+= 1.2.1 =
+* Fixed fb_commentcount() bug returning the incorrect href attribute
+* Added a new parameter to fb_commentcount() to allow for returning the count instead of directly echoing it out.
+* Fixed fb_likebutton() "send" bug
+* Updated/fixed the fb_likebutton() and fb_sendbutton() to fall back on the current item in The Loop if no pass "href" attribute is passed in the parameters.
+* Fixed the XML warning for fb_commentcount()
 
 = 1.2.0 =
 * Added the new Facebook Send button. (See instructions for usage example)

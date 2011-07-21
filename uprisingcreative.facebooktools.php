@@ -1,12 +1,20 @@
 <?php
 
 /*
- *	Last Modified:	2011-04-29
+ *	Last Modified:	2011-07-20
  *
  *
  *	----------------------------------
  *	CHANGELOG
  *	----------------------------------
+ *	2011-07-20
+ 		- Updated fb_likebutton() and fb_sendbutton() to accept $post as the first parameter
+ 		- Fixed fb_likebutton() bug where send was not properly showing up when using "1" instead of a a true boolean
+ 		- Added new method fb_loginbutton()
+ *	2011-07-18
+ 		- Fixed fb_commentcount() returne XML warning check
+ *	2011-06-01
+ 		- Fixed fb_commentcount() bug returning incorrect href attribute
  *	2011-04-29
  		- New method fb_sendbutton()
  		- Updated fb_likebutton()
@@ -17,7 +25,6 @@
  		- Fixed 'numposts' and 'num_posts' difference between the Legacy and New comment box
  *
  */
-
 
 class UprisingCreative_FacebookTools {
 
@@ -173,25 +180,30 @@ EOD;
 		$fql = 'SELECT count FROM comments_info WHERE app_id = \''.get_option($this->ns.'fbtools_app_id').'\' AND xid = \''.urlencode($link).'\'';
 		if($migrated) {
 			##	Get New Comment Box Settings
-			$href = (!empty($params['href'])) ? $params['href'] : $this->currentURI;
+			$href = (!empty($params['href'])) ? $params['href'] : (($post->ID) ? get_permalink($post->ID) : $this->currentURI);
 			$fql = 'SELECT commentsbox_count FROM link_stat WHERE url = \''.urlencode($href).'\'';
 		}
 		$res = $this->fb_query($fql);
-		$xml = new SimpleXMLElement($res);
-		$count = 0;
-		if($migrated) { $count = (isset($xml->link_stat->commentsbox_count)) ? (string) $xml->link_stat->commentsbox_count : 0; }
-		else { $count = (isset($xml->comments_info)) ? (string) $xml->comments_info->count : 0; }
-		return $count;
+		if($res) {
+			$xml = new SimpleXMLElement($res);
+			$count = 0;
+			if($migrated) { $count = (isset($xml->link_stat->commentsbox_count)) ? (string) $xml->link_stat->commentsbox_count : 0; }
+			else { $count = (isset($xml->comments_info)) ? (string) $xml->comments_info->count : 0; }
+			return $count;
+		}
+		else { return 0; }
 	}
 
-	public function fb_likebutton($params=array()) {
+	public function fb_likebutton($post,$params=array()) {
 		## Set Defaults
-		$href = (!empty($params['href'])) ? $params['href'] : get_option($this->ns.'fbtools_likebutton_href');
+		$href = (!empty($params['href'])) ? $params['href'] : (($post->ID) ? get_permalink($post->ID) : $this->currentURI);
 		$layout = (!empty($params['layout'])) ? $params['layout'] : get_option($this->ns.'fbtools_likebutton_layout');
 		$width = (!empty($params['width'])) ? $params['width'] : get_option($this->ns.'fbtools_likebutton_width');
 		$colorscheme = (!empty($params['colorscheme'])) ? $params['colorscheme'] : get_option($this->ns.'fbtools_likebutton_colorscheme');
 		$action = (!empty($params['action'])) ? $params['action'] : get_option($this->ns.'fbtools_likebutton_action');
 		$send = (!empty($params['send'])) ? $params['send'] : get_option($this->ns.'fbtools_likebutton_send');
+			//Change integer flag to a boolean string
+			$send = ($send) ? 'true' : 'false';
 
 		$paramstr = '';
 		if($href) { $paramstr .= ' href="'.$href.'"'; }
@@ -203,9 +215,9 @@ EOD;
 		return '<fb:like '.$paramstr.'></fb:like>';
 	}
 
-	public function fb_sendbutton($params=array()) {
+	public function fb_sendbutton($post,$params=array()) {
 		## Set Defaults
-		$href = (!empty($params['href'])) ? $params['href'] : get_option($this->ns.'fbtools_sendbutton_href');
+		$href = (!empty($params['href'])) ? $params['href'] : (($post->ID) ? get_permalink($post->ID) : $this->currentURI);
 		$font = (!empty($params['font'])) ? $params['font'] : get_option($this->ns.'fbtools_sendbutton_font');
 		$colorscheme = (!empty($params['colorscheme'])) ? $params['colorscheme'] : get_option($this->ns.'fbtools_sendbutton_colorscheme');
 		$ref = (!empty($params['ref'])) ? $params['ref'] : get_option($this->ns.'fbtools_sendbutton_ref');
@@ -244,6 +256,21 @@ EOD;
 			}
 		}
 		return $comments;
+	}
+	
+	public function fb_loginbutton($post,$params=array()) {
+		## Set Defaults
+		$showFaces = (!empty($params['show-faces'])) ? $params['show-faces'] : 'false';
+		$width = (!empty($params['width'])) ? $params['width'] : 200;
+		$maxRows = (!empty($params['max-rows'])) ? $params['max-rows'] : 1;
+		$perms = (!empty($params['perms'])) ? $params['perms'] : '';
+
+		$paramstr = '';
+		if($showFaces) { $paramstr .= ' show-faces="'.$showFaces.'"'; }
+		if($width) { $paramstr .= ' width="'.$width.'"'; }
+		if($maxRows) { $paramstr .= ' max-rows="'.$maxRows.'"'; }
+		if($perms) { $paramstr .= ' ref="'.$perms.'"'; }
+		return '<fb:login-button '.$paramstr.'></fb:login-button>';
 	}
 
 }

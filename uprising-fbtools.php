@@ -3,7 +3,7 @@
 Plugin Name: Facebook Tools
 Plugin URI: http://www.theuprisingcreative.com/
 Description: Add Facebook support to your WordPress blog.
-Version: 1.2.0
+Version: 1.2.1
 Author: The Uprising Creative
 Author URI: http://www.theuprisingcreative.com/
 License: GPL2
@@ -47,31 +47,31 @@ function uprising_fbtools_add_menus() {
 
 ##	Register Settings
 function uprising_fbtools_register_settings() {
-		//General
-		register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_app_id');
-		register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_api_key');
-		register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_api_secret');
-		register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_facebook_url');
-		register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_disable_opengraph');
-		//Comments
-		register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_numposts');
-		register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_reverse');
-		register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_migrated');
-		register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_width');
-		register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_css');
-		register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_colorscheme');
-		//Like
-		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_href');
-		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_send');
-		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_layout');
-		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_width');
-		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_colorscheme');
-		register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_action');
-		//Send
-		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_href');
-		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_font');
-		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_colorscheme');
-		register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_ref');
+	//General
+	register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_app_id');
+	register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_api_key');
+	register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_api_secret');
+	register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_facebook_url');
+	register_setting('uprisingcreative_fbtools_settings','uprisingcreative_fbtools_disable_opengraph');
+	//Comments
+	register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_numposts');
+	register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_reverse');
+	register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_migrated');
+	register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_width');
+	register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_css');
+	register_setting('uprisingcreative_fbtools_comments_settings','uprisingcreative_fbtools_comments_colorscheme');
+	//Like
+	register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_href');
+	register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_send');
+	register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_layout');
+	register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_width');
+	register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_colorscheme');
+	register_setting('uprisingcreative_fbtools_likebutton_settings','uprisingcreative_fbtools_likebutton_action');
+	//Send
+	register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_href');
+	register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_font');
+	register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_colorscheme');
+	register_setting('uprisingcreative_fbtools_sendbutton_settings','uprisingcreative_fbtools_sendbutton_ref');
 }
 
 ##	Admin Pages
